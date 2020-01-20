@@ -16,12 +16,17 @@ passport.deserializeUser((id, done) => {
   });
 });
 
+let url =
+  process.env.NODE_ENV === "production"
+    ? "https://afternoon-harbor-44366.herokuapp.com"
+    : "http://localhost:5000";
+
 passport.use(
   new GoogleStrategy(
     {
       clientID: keys.googleClientID,
       clientSecret: keys.googleClientSecret,
-      callbackURL: "/auth/google/callback"
+      callbackURL: `${url}/auth/google/callback`
     },
     (accessToken, refreshToken, profile, done) => {
       User.findOne({ googleId: profile.id }).then(existingUser => {
